@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services | Octalgo</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="uploads/logo">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        oct: {
+                            yellow: '#FFE073', 
+                            dark: '#1A1A1A', // Matched to main site
+                            grey: '#F5F6F7',
+                            light: '#FFFFFF',
+                            text: '#252525',
+                            subtext: '#666666'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'card': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React and ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; color: #252525; background-color: #F5F6F7; }
+        .smooth-scroll { scroll-behavior: smooth; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #FFE073; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #eecd64; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up { animation: fadeIn 0.8s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-gray-50 smooth-scroll">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Data Source for Services ---
+        const servicesData = {
+            "software-development": {
+                title: "Software Development Services",
+                description: "Your idea turned into product and delivered to market by professionals with diverse industry expertise.",
+                image: "uploads/1.1", // Using main site image refs where possible or fallbacks
+                features: [
+                    {
+                        title: "Custom software development",
+                        description: "We tailor every solution to the individual needs of each client, selecting appropriate technologies that best represent the objectives of the business.",
+                        tags: ["Custom platforms", "CRM development", "SaaS development"],
+                        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Enterprise software development",
+                        description: "Octalgo delivers complex solutions for enterprises that are easily scalable and can actively stand up to a large number of operations and processes.",
+                        tags: ["ERP software", "Business intelligence", "Inventory management"],
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Legacy software modernization",
+                        description: "Our team is committed to updating integral parts of your system to deliver a modern solution and ensure your business operates smoothly and efficiently.",
+                        tags: ["Data migration", "Code optimization", "UI UX redesign"],
+                        image: "https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    }
+                ]
+            },
+            "web-development": {
+                title: "Web Development Services",
+                description: "Build robust, high-performing web applications that scale with your business and provide exceptional user experiences.",
+                image: "uploads/web2",
+                features: [
+                    {
+                        title: "Frontend Development",
+                        description: "Creating visually stunning and highly interactive user interfaces using modern frameworks like React, Vue, and Angular.",
+                        tags: ["SPA Development", "React/Vue/Angular", "PWA"],
+                        image: "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Backend Development",
+                        description: "Secure and scalable server-side architecture to power your applications, ensuring data integrity and speed.",
+                        tags: ["Node.js", "Python/Django", "API Development"],
+                        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvr_eTHFONee96HoU9PCzyL8zPW1-JX_cufw&s"
+                    },
+                    {
+                        title: "E-commerce Solutions",
+                        description: "Comprehensive e-commerce platforms designed to convert visitors into customers with seamless checkout experiences.",
+                        tags: ["Shopify", "Custom Carts", "Payment Integration"],
+                        image: "https://pakistanhouse.net/wp-content/uploads/2022/12/1_SwFB1o_k1LGprN-XRUZQ8w-1200x900.jpeg"
+                    }
+                ]
+            },
+            "mobile-development": {
+                title: "Mobile App Development",
+                description: "Reach your customers wherever they are with powerful, intuitive mobile applications for iOS and Android.",
+                image: "uploads/dev",
+                features: [
+                    {
+                        title: "Native iOS & Android",
+                        description: "High-performance native applications tailored specifically for the Apple and Google ecosystems.",
+                        tags: ["Swift", "Kotlin", "App Store Optimization"],
+                        image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Cross-Platform Development",
+                        description: "Cost-effective solutions that run smoothly on both iOS and Android using a single codebase.",
+                        tags: ["Flutter", "React Native", "Hybrid Apps"],
+                        image: "https://images.unsplash.com/photo-1526498460520-4c246339dccb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Mobile UI/UX Design",
+                        description: "User-centric design principles applied to small screens to ensure intuitive navigation and engagement.",
+                        tags: ["Prototyping", "User Research", "Wireframing"],
+                        image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    }
+                ]
+            },
+            "ai-development": {
+                title: "AI & Machine Learning",
+                description: "Leverage the power of Artificial Intelligence to automate processes, gain insights, and predict future trends.",
+                image: "uploads/ai",
+                features: [
+                    {
+                        title: "Machine Learning Solutions",
+                        description: "Algorithms that learn from your data to improve performance without being explicitly programmed.",
+                        tags: ["Predictive Analytics", "Deep Learning", "Neural Networks"],
+                        image: "https://images.unsplash.com/photo-1555255707-c07966088b7b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Natural Language Processing",
+                        description: "Empower your applications to understand, interpret, and generate human language.",
+                        tags: ["Chatbots", "Sentiment Analysis", "Text Mining"],
+                        image: "https://images.unsplash.com/photo-1531746790731-6c087fecd65a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Computer Vision",
+                        description: "Teach your systems to 'see' and interpret visual information from the world.",
+                        tags: ["Image Recognition", "Object Detection", "Face Recognition"],
+                        image: "https://images.unsplash.com/photo-1561557944-6e7860d1a7eb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    }
+                ]
+            },
+            "ui-ux": {
+                title: "UI/UX Design Services",
+                description: "User-centric design that drives engagement and satisfaction. We craft beautiful interfaces.",
+                image: "uploads/ui",
+                features: [
+                    {
+                        title: "User Research & Analysis",
+                        description: "Understanding your users is key to a successful product. We conduct in-depth research to define user personas and journeys.",
+                        tags: ["User Interviews", "Competitor Analysis", "User Testing"],
+                        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Wireframing & Prototyping",
+                        description: "We visualize the structure and flow of your application before moving to high-fidelity designs, saving time and resources.",
+                        tags: ["Interactive Prototypes", "Information Architecture", "Wireframes"],
+                        image: "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "Visual Design System",
+                        description: "Creating stunning visual systems that align with your brand identity and ensure consistency across all screens.",
+                        tags: ["Design Systems", "UI Kits", "Branding"],
+                        image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=800&q=80"
+                    }
+                ]
+            },
+            "cloud": {
+                title: "Cloud Solutions",
+                description: "Scalable cloud infrastructure and migration services to ensure your business is always online.",
+                image: "uploads/cloud",
+                features: [
+                    {
+                        title: "Cloud Migration Strategy",
+                        description: "Seamlessly move your on-premise infrastructure to the cloud with minimal downtime and maximum efficiency.",
+                        tags: ["Lift & Shift", "Re-platforming", "Data Migration"],
+                        image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=800&q=80"
+                    },
+                    {
+                        title: "DevOps & Automation",
+                        description: "Automate your deployment pipelines and infrastructure management for faster time-to-market and reliability.",
+                        tags: ["Docker", "Kubernetes", "CI/CD Pipelines"],
+                        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvFHW724Y_qbrznn_jHcRqlgbCI7M3pveWew&s"
+                    },
+                    {
+                        title: "Cloud Security & Compliance",
+                        description: "Protect your cloud infrastructure with advanced security protocols and continuous compliance monitoring.",
+                        tags: ["Identity Management", "Encryption", "Compliance Audits"],
+                        image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80"
+                    }
+                ]
+            }
+        };
+
+        // --- Icons ---
+        const MenuIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>;
+        const XIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 18 18"/></svg>;
+        const ArrowRight = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>;
+        const ArrowUpRight = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>;
+        const MailIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>;
+        const FlagIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></svg>;
+        const FacebookIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>;
+        const LinkedinIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>;
+
+        const Navbar = () => {
+            const [isOpen, setIsOpen] = useState(false);
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 20);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'}`}>
+                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        <a href="index.html" className="flex items-center gap-3 cursor-pointer group">
+                            <img src="uploads/logo" alt="Octalgo" className="w-10 h-10 object-contain" />
+                            <div className="flex flex-col">
+                                <span className="text-xl font-bold tracking-tight text-oct-dark leading-none">Octalgo</span>
+                                <span className="text-[0.65rem] font-medium text-oct-subtext tracking-widest uppercase mt-0.5">Innovation & Excellence</span>
+                            </div>
+                        </a>
+                        <div className="hidden md:flex items-center space-x-8">
+                            <a href="index.html" className="text-oct-dark font-medium hover:text-gray-600 transition-colors">Home</a>
+                            {['Services', 'Industries'].map((item) => (
+                                <a key={item} href={`index.html#${item.toLowerCase()}`} className="text-oct-dark font-medium hover:text-gray-600 transition-colors">{item}</a>
+                            ))}
+                            <a href="about.html" className="text-oct-dark font-medium hover:text-gray-600 transition-colors">About</a>
+                            <a href="#contact" className="bg-oct-yellow text-oct-dark px-6 py-2.5 rounded hover:brightness-105 transition-colors font-bold text-sm shadow-sm">Contact</a>
+                        </div>
+                        <div className="md:hidden">
+                            <button onClick={() => setIsOpen(!isOpen)} className="text-oct-dark focus:outline-none">{isOpen ? <XIcon /> : <MenuIcon />}</button>
+                        </div>
+                    </div>
+                    {isOpen && (
+                        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg border-t border-gray-100 py-6 px-6 flex flex-col space-y-4">
+                            <a href="index.html" className="text-lg font-medium text-oct-dark block">Home</a>
+                            {['Services', 'Industries'].map((item) => (
+                                <a key={item} href={`index.html#${item.toLowerCase()}`} onClick={() => setIsOpen(false)} className="text-lg font-medium text-oct-dark block">{item}</a>
+                            ))}
+                            <a href="about.html" className="text-lg font-medium text-oct-dark block">About</a>
+                            <a href="#contact" onClick={() => setIsOpen(false)} className="bg-oct-yellow text-oct-dark w-full py-3 rounded font-bold mt-4 shadow-md block text-center">Contact</a>
+                        </div>
+                    )}
+                </nav>
+            );
+        };
+
+        const Footer = () => (
+            <footer className="bg-oct-dark text-white pt-20 pb-10">
+                <div className="max-w-7xl mx-auto px-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                        {/* Column 1: Brand & Desc */}
+                        <div>
+                            <div className="flex items-center space-x-2 mb-6">
+                                <img src="uploads/logo" alt="Octalgo" className="w-8 h-8 object-contain brightness-0 invert" />
+                                <span className="text-2xl font-bold">Octalgo</span>
+                            </div>
+                            <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                                Octalgo aids businesses in reaching new heights with state-of-the-art software and tailored solutions powered by a professional team.
+                            </p>
+                            <div className="flex gap-4">
+                                <a href="#" className="w-10 h-10 bg-white/5 flex items-center justify-center rounded-full hover:bg-oct-yellow hover:text-oct-dark transition-all"><FacebookIcon /></a>
+                                <a href="#" className="w-10 h-10 bg-white/5 flex items-center justify-center rounded-full hover:bg-oct-yellow hover:text-oct-dark transition-all"><LinkedinIcon /></a>
+                            </div>
+                        </div>
+
+                        {/* Column 2: Company */}
+                        <div>
+                            <h4 className="font-bold text-white text-lg mb-6">Company</h4>
+                            <ul className="space-y-4 text-gray-400 text-sm">
+                                <li><a href="index.html" className="hover:text-oct-yellow transition-colors">Home</a></li>
+                                <li><a href="about.html" className="hover:text-oct-yellow transition-colors">About us</a></li>
+                                <li><a href="index.html#services" className="hover:text-oct-yellow transition-colors">Services</a></li>
+                                <li><a href="#contact" className="hover:text-oct-yellow transition-colors">Contact us</a></li>
+                            </ul>
+                        </div>
+
+                        {/* Column 3: Services */}
+                        <div>
+                            <h4 className="font-bold text-white text-lg mb-6">Services</h4>
+                            <ul className="space-y-4 text-gray-400 text-sm">
+                                <li><a href="?service=software-development" className="hover:text-oct-yellow transition-colors">Software Development</a></li>
+                                <li><a href="?service=web-development" className="hover:text-oct-yellow transition-colors">Web Development</a></li>
+                                <li><a href="?service=mobile-development" className="hover:text-oct-yellow transition-colors">Mobile App Development</a></li>
+                                <li><a href="?service=ui-ux" className="hover:text-oct-yellow transition-colors">UI/UX Design</a></li>
+                                <li><a href="?service=ai-development" className="hover:text-oct-yellow transition-colors">AI & Machine Learning</a></li>
+                            </ul>
+                        </div>
+
+                        {/* Column 4: Contact */}
+                        <div>
+                            <h4 className="font-bold text-white text-lg mb-6">Contact</h4>
+                            <ul className="space-y-4 text-gray-400 text-sm">
+                                <li className="flex items-start gap-3">
+                                    <span className="mt-1 text-oct-yellow"><MailIcon /></span>
+                                    <a href="mailto:hassan@octalgo.com" className="hover:text-white">hassan@octalgo.com</a>
+                                </li>
+                                <li className="flex items-start gap-3">
+                                    <span className="mt-1 text-oct-yellow"><FlagIcon /></span>
+                                    <a href="tel:+923218260286" className="hover:text-white">+92-321-8260286</a>
+                                </li>
+                                <li className="mt-4">
+                                    <span className="block text-gray-500 mb-1 text-xs uppercase tracking-wide">Locations</span>
+                                    <span>Pakistan, United States, Germany</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+                        <p>&copy; {new Date().getFullYear()} Octalgo. All rights reserved.</p>
+                        <div className="flex gap-6">
+                            {/* Privacy Policy and Terms */}
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        );
+
+        const Contact = () => {
+             const [services, setServices] = useState({});
+            const toggleService = (key) => setServices(prev => ({...prev, [key]: !prev[key]}));
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+                const form = e.target;
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerText;
+                
+                const formData = {
+                    name: form.querySelector('input[placeholder="Your name"]').value,
+                    email: form.querySelector('input[placeholder="Email address"]').value,
+                    services: services, 
+                    message: form.querySelector('textarea').value
+                };
+
+                try {
+                    submitBtn.disabled = true;
+                    submitBtn.innerText = "Sending...";
+                    
+                    const response = await fetch('http://localhost/octalgo/backend/submit_contact.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(formData),
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert('Message sent successfully!');
+                        form.reset();
+                        setServices({}); 
+                    } else {
+                        alert('Error: ' + (result.message || 'Failed to send message'));
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to connect to server. Ensure PHP backend is running.');
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = originalBtnText;
+                }
+            };
+
+            return (
+                <section id="contact" className="py-24 bg-[#F5F6F7]">
+                    <div className="max-w-7xl mx-auto px-6">
+                         <div className="text-center mb-16">
+                            <h2 className="text-4xl lg:text-5xl font-bold mb-4 text-oct-dark">Create your product with us</h2>
+                            <p className="text-gray-500 text-lg">Drop us a line to develop your product together!</p>
+                        </div>
+                        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16">
+                            <div className="w-full lg:w-2/3 bg-white p-8 md:p-12 rounded-xl shadow-sm border border-gray-100">
+                                <form onSubmit={handleSubmit}>
+                                    <div className="flex flex-col md:flex-row gap-6 mb-8">
+                                        <div className="w-full"><label className="block text-sm font-bold text-oct-dark mb-2">Name*</label><input type="text" placeholder="Your name" className="w-full p-4 rounded-lg border border-gray-200 focus:border-oct-yellow focus:ring-1 focus:ring-oct-yellow outline-none transition-all" required /></div>
+                                        <div className="w-full"><label className="block text-sm font-bold text-oct-dark mb-2">Email*</label><input type="email" placeholder="Email address" className="w-full p-4 rounded-lg border border-gray-200 focus:border-oct-yellow focus:ring-1 focus:ring-oct-yellow outline-none transition-all" required /></div>
+                                    </div>
+                                    <div className="mb-8">
+                                        <label className="block text-sm font-bold text-oct-dark mb-4">Choose what you need help with:*</label>
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            {['Software Development', 'AI Development', 'Blockchain', 'Web Development', 'UI/UX Design', 'Cloud solutions', 'Mobile App Development', 'Web Design', 'Other'].map((label, idx) => (
+                                                <label key={idx} className="flex items-center gap-3 cursor-pointer group">
+                                                    <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${services[label] ? 'bg-oct-yellow border-oct-yellow' : 'border-gray-300 bg-white'}`}>
+                                                        <input type="checkbox" className="hidden" checked={services[label] || false} onChange={() => toggleService(label)}/>
+                                                        {services[label] && <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path></svg>}
+                                                    </div>
+                                                    <span className="text-gray-600 text-sm group-hover:text-oct-dark transition-colors">{label}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className="mb-8">
+                                         <label className="block text-sm font-bold text-oct-dark mb-2">Tell us about your needs</label>
+                                         <textarea placeholder="Message..." className="w-full p-4 rounded-lg border border-gray-200 focus:border-oct-yellow focus:ring-1 focus:ring-oct-yellow outline-none transition-all h-32 resize-none"></textarea>
+                                    </div>
+                                    <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                                        <p className="text-xs text-gray-400 max-w-sm">By sending a message you agree to our <a href="#" className="underline hover:text-oct-dark">Privacy Policy</a>.</p>
+                                        <button type="submit" className="bg-oct-yellow text-oct-dark px-8 py-4 rounded font-bold hover:brightness-105 transition-all flex items-center gap-2 shadow-sm text-lg whitespace-nowrap">Get in touch <ArrowUpRight /></button>
+                                    </div>
+                                </form>
+                            </div>
+                            {/* Updated Right Column: Removed Profile Card, kept simple contacts */}
+                            <div className="w-full lg:w-1/3 space-y-8">
+                                <div className="space-y-4">
+                                    <a href="mailto:info@impltech.com" className="flex items-center gap-3 text-gray-600 hover:text-oct-dark transition-colors group"><MailIcon /><span className="group-hover:underline">hassan@octalgo.com</span></a>
+                                     <div className="flex items-center gap-3 text-gray-600"><FlagIcon /><span>+92 321 8260286</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const ServiceHero = ({ title, description, image }) => {
+            return (
+                <section className="relative pt-32 pb-16 lg:pt-48 lg:pb-24 bg-white overflow-hidden">
+                    <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+                        <div className="z-10 animate-fade-up">
+                            <h1 className="text-5xl lg:text-[4rem] font-bold leading-tight mb-8 text-oct-dark tracking-tight">
+                                {title}
+                            </h1>
+                            <p className="text-lg text-gray-500 mb-10 max-w-lg leading-relaxed">
+                                {description}
+                            </p>
+                            <a href="#contact" className="bg-oct-yellow text-oct-dark px-8 py-4 rounded font-bold hover:brightness-105 transition-all flex items-center gap-2 shadow-sm text-lg group w-fit">
+                                Get in touch 
+                                <span className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"><ArrowUpRight /></span>
+                            </a>
+                        </div>
+                        <div className="relative h-[400px] w-full flex items-center justify-center animate-fade-up" style={{animationDelay: '0.2s'}}>
+                            {/* Hero Image / Dashboard Mockup */}
+                            <div className="relative w-full max-w-lg bg-gray-50 rounded-xl shadow-2xl border border-gray-100 p-2 z-20">
+                                <div className="absolute -top-4 -left-4 w-24 h-24 bg-oct-yellow/20 rounded-full blur-2xl"></div>
+                                <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-blue-100/30 rounded-full blur-2xl"></div>
+                                <img src={image} alt="Service Dashboard" className="relative rounded-lg w-full h-auto z-10 object-cover" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        // Redesigned FeatureBlock to look like a premium card with alternating layout
+        const FeatureBlock = ({ title, description, tags, image, index }) => {
+            const isEven = index % 2 === 0;
+            return (
+                <div className="py-12">
+                    <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                        <div className={`flex flex-col lg:flex-row ${isEven ? '' : 'lg:flex-row-reverse'}`}>
+                            {/* Text Section */}
+                            <div className="w-full lg:w-1/2 p-8 md:p-16 flex flex-col justify-center">
+                                <h2 className="text-3xl font-bold text-oct-dark mb-6">{title}</h2>
+                                <p className="text-gray-600 text-lg leading-relaxed mb-8">{description}</p>
+                                
+                                <div className="space-y-4">
+                                    {tags.map((tag, idx) => (
+                                        <div key={idx} className="flex items-center gap-3">
+                                            <div className="w-2 h-2 bg-oct-yellow rounded-full"></div>
+                                            <span className="text-gray-800 font-semibold text-lg">{tag}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            {/* Image Section */}
+                            <div className="w-full lg:w-1/2 min-h-[300px] lg:min-h-[400px] relative">
+                                <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+                                <div className={`absolute inset-0 bg-gradient-to-t from-black/20 to-transparent lg:bg-gradient-to-r ${isEven ? 'lg:from-white/10 lg:to-transparent' : 'lg:from-transparent lg:to-white/10'}`}></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const CTOCallToAction = () => {
+            return (
+                <section className="bg-gray-50 py-24 border-y border-gray-200">
+                    <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center gap-12">
+                        <div className="flex-1">
+                            <h2 className="text-4xl font-bold text-oct-dark mb-6">Book a free call with a CTO</h2>
+                            <p className="text-lg text-gray-600 mb-8 max-w-xl">
+                                Meet with our experts to consult on a solution that aligns with your needs. Get technical insights and a roadmap for your project.
+                            </p>
+                            <a href="#contact" className="bg-oct-yellow text-oct-dark px-8 py-4 rounded font-bold hover:brightness-105 transition-all shadow-md text-lg inline-block text-center">
+                                Schedule a consultation
+                            </a>
+                        </div>
+                        <div className="flex-1 flex justify-center md:justify-end">
+                            <div className="relative w-80 h-96">
+                                <div className="absolute inset-0 bg-oct-yellow rounded-2xl transform rotate-6 opacity-20"></div>
+                                <div className="absolute inset-0 bg-gray-200 rounded-2xl transform -rotate-3 overflow-hidden border-4 border-white shadow-xl">
+                                    <img src="uploads/1" alt="CTO" className="w-full h-full object-cover" />
+                                </div>
+                                <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-lg shadow-lg border border-gray-100 flex items-center gap-3">
+                                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                                    <span className="font-bold text-oct-dark text-sm">Available for call</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+
+        const App = () => {
+            const [currentService, setCurrentService] = useState(null);
+
+            useEffect(() => {
+                // Get 'service' from URL parameters
+                const params = new URLSearchParams(window.location.search);
+                const serviceKey = params.get('service') || 'software-development'; // Default
+                
+                // If the service doesn't exist, fallback to software-development
+                setCurrentService(servicesData[serviceKey] ? servicesData[serviceKey] : servicesData['software-development']);
+            }, []);
+
+            if (!currentService) return null; // or a loader
+
+            return (
+                <div className="antialiased text-oct-text bg-gray-50">
+                    <Navbar />
+                    <ServiceHero 
+                        title={currentService.title} 
+                        description={currentService.description}
+                        image={currentService.image}
+                    />
+                    <section className="bg-white py-12">
+                        <div className="max-w-7xl mx-auto px-6">
+                            {currentService.features.map((f, i) => <FeatureBlock key={i} {...f} index={i} />)}
+                        </div>
+                    </section>
+                    <CTOCallToAction />
+                    <Contact />
+                    <Footer />
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
